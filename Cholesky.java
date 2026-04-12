@@ -212,14 +212,43 @@ public class Cholesky {
         return 2.0 * soma;
     }
 
+    /**
+     * Retorna o fator triangular superior R da decomposição de Cholesky,
+     * tal que A = Rᵀ * R.
+     * @return matriz R (n x n), triangular superior
+     */
+    public double[][] getR() {
+        double[][] R = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                R[i][j] = L[j][i];   // L é triangular inferior
+            }
+        }
+        return R;
+    }
+
     public static void main(String[] args) {
-        // Exemplo 1: Matriz 3x3 simétrica e positiva definida
         double[][] A = {
-            { 4,  2, -2},
-            { 2,  5,  1},
-            {-2,  1,  6}
+            {4, 2, 0, 0},
+            {2, 5, 2, 0},
+            {0, 2, 5, 2},
+            {0, 0, 2 ,5}
         };
-        double[] b = { 2, 1, 3 };
+        double[] b = { 4, 6, 8, -1};
+
+        /*
+        Matriz positiva definida 4x4
+        
+        double[][] A = {
+            {4, 2, 0, 0},
+            {2, 5, 2, 0},
+            {0, 2, 5, 2},
+            {0, 0, 2 ,5}
+        };
+        double[] b = { 4, 6, 8, -1};
+
+
+        */
 
         try {
             Cholesky cholesky = new Cholesky(A);
@@ -229,6 +258,14 @@ public class Cholesky {
             for (int i = 0; i < L.length; i++) {
                 for (int j = 0; j < L[i].length; j++) {
                     System.out.printf("%8.4f ", L[i][j]);
+                }
+                System.out.println();
+            }
+            System.out.println("Fator R (triangular superior)");
+            double[][] R = cholesky.getR();
+            for (int i = 0; i < R.length; i++) {
+                for (int j = 0; j < R[i].length; j++) {
+                    System.out.printf("%8.4f ", R[i][j]);
                 }
                 System.out.println();
             }

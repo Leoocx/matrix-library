@@ -136,7 +136,7 @@ public class GaussSolver {
         // Teste 5: Sistema 4x4
         double A5[][] = 
         {{2, 1, 1, 0}, 
-        {4, 3, 3, 1},
+        {0, 1, 1, 1},
         {8, 7, 9, 5}, 
         {6, 7, 9, 8}};
         double b5[] = {3, 7, 19, 17};
