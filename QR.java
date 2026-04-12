@@ -178,11 +178,10 @@ public class QR {
         // 2. Decomposição QR de uma matriz não singular
         // Exemplo: matriz 5x5 com determinante não nulo
         double[][] A = {
-            {2, 1, 0, 1, 3},
-            {1, 2, 1, 0, 1},
-            {0, 1, 3, 2, 0},
-            {1, 0, 2, 4, 1},
-            {3, 1, 0, 1, 2}
+            {1, 1, 0, 0},
+            {1, 0, 1, 0},
+            {0, 1, 1, 0},
+            {0, 0, 1, 1},
         };
         
         System.out.println("\n\nMatriz A (não singular):");

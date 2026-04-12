@@ -1,0 +1,53 @@
+{   Crie uma matriz positiva definida A, quadrada, de tamanho 4 utilizando uma matriz M
+    não singular de tamanho 4:
+        {4, 2, 0, 0},
+        {2, 5, 2 ,0},
+        {0, 2, 5, 2},
+        {0, 0, 2, 5}
+
+    Crie um vetor x ∈ RN, utilize A para obter um vetor solução b, utili-
+    zando Ax = b.
+        x=[1,0, 2,-1]^T 
+        b=[4,6,8,-1]^T
+}
+
+
+{
+        Crie uma matriz quadrada A, de tamanho 4, não singular, que não possua entradas
+        iguais a zero na diagonal e que possua números pequenos.
+            {1, 2, 1, 0},
+            {2, 5, 1, 1},
+            {1, 1, 3, 2},
+            {0, 1, 2, 6}
+
+     Crie um vetor x ∈ R4, utilize A para obter um vetor soluc¸ ˜ao b, utilizando
+    Ax = b
+        x=[1,1,1,1]^T 
+        b=[4,9,7,9]^T    
+}
+
+{
+        Crie uma matriz quadrada A, de tamanho 4, não singular, que possua entradas iguais a
+    zero em alguns elementos da diagonal e que possua números pequenos.
+        {0,1,2,1},
+        {1,0,3,1},
+        {2,1,1,0},
+        {1,2,0,1}
+
+
+     Crie um vetor x ∈ R4, utilize A para obter um vetor solução b, utilizando
+    Ax = b.
+        x=[1,1,0,2]^T 
+        b=[3,3,3,5]^T    
+}
+
+{
+    Crie uma matrix quadrada A, de tamanho 4, não singular.
+    {1,1,0,0},
+    {1,0,1,0},
+    {0,1,1,0},
+    {0,0,1,1}
+
+        x=[1,2,-1,1]^T 
+        b=[3,0,1,0]^T  
+}

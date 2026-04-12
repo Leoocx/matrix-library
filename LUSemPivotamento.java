@@ -66,20 +66,32 @@ public class LUSemPivotamento {
 
     public static void main(String[] args) {
         double[][] A = {
-            {2, 1, 1, 0},
-            {0, 1, 1, 1},
-            {8, 7, 9, 5},
-            {6, 7, 9, 8}
+            {1, 2, 1, 0},
+            {2, 5, 1, 1},
+            {1, 1, 3, 2},
+            {0, 1, 2, 6}
         };
-        double[] b = {3, 7, 19, 17};
+        double[] x = {1,1,1,1};
+
+        double[] b = multiplicarMatrizVetor(A, x);
+
+
+        System.out.println("b:");
+            for (double val : b) {
+                System.out.printf("%.2f ", val);
+            }System.out.println();
 
         LUSemPivotamento lu = new LUSemPivotamento(A, b);
-        System.out.println("L (triangular inferior):");
+            System.out.println("L (triangular inferior):");
         imprimirMatriz(lu.getL());
-        System.out.println("\nU (triangular superior):");
+            System.out.println("\nU (triangular superior):");
         imprimirMatriz(lu.getU());
-        System.out.println("\nb modificado:");
+            System.out.println("\nb modificado:");
         imprimirVetor(lu.getBModificado());
+    
+        /*double[][] LU =multiplicarMatrizes(lu.getL(), lu.getU()) ;
+        System.out.println("Matriz LU:");
+        imprimirMatriz(LU);*/
     }
 
     private static void imprimirMatriz(double[][] M) {
@@ -91,5 +103,62 @@ public class LUSemPivotamento {
     private static void imprimirVetor(double[] v) {
         for (double val : v) System.out.printf("%8.4f ", val);
         System.out.println();
+    }
+
+    /**
+ * Multiplica uma matriz A (n x m) por um vetor x (m) resultando em b (n).
+ * 
+ * @param A matriz de coeficientes (n linhas, m colunas)
+ * @param x vetor de entrada (tamanho m)
+ * @return vetor b = A * x (tamanho n)
+ * @throws IllegalArgumentException se as dimensões forem incompatíveis
+ */
+public static double[] multiplicarMatrizVetor(double[][] A, double[] x) {
+    // Validações
+    if (A == null || x == null)
+        throw new IllegalArgumentException("Matriz e vetor não podem ser nulos.");
+    
+    int n = A.length;          // número de linhas
+    if (n == 0)
+        throw new IllegalArgumentException("Matriz não pode ter zero linhas.");
+    
+    int m = A[0].length;       // número de colunas (assumindo matriz retangular)
+    // Verifica se todas as linhas têm o mesmo número de colunas
+    for (int i = 1; i < n; i++) {
+        if (A[i].length != m)
+            throw new IllegalArgumentException("Matriz irregular: linha " + i + " tem " + A[i].length + " colunas, esperado " + m);
+    }
+    
+    if (x.length != m)
+        throw new IllegalArgumentException("Tamanho do vetor x (" + x.length + ") não coincide com número de colunas da matriz (" + m + ")");
+    
+    double[] b = new double[n];
+    
+    // Multiplicação: b[i] = soma_{j=0}^{m-1} A[i][j] * x[j]
+    for (int i = 0; i < n; i++) {
+        double soma = 0.0;
+        for (int j = 0; j < m; j++) {
+            soma += A[i][j] * x[j];
+        }
+        b[i] = soma;
+    }
+    return b;
+    }
+
+private static double[][] multiplicarMatrizes(double[][] A, double[][] B) {
+        int n = A.length;
+        int m = A[0].length;
+        int p = B[0].length;
+        double[][] C = new double[n][p];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < p; j++) {
+                double soma = 0.0;
+                for (int k = 0; k < m; k++) {
+                    soma += A[i][k] * B[k][j];
+                }
+                C[i][j] = soma;
+            }
+        }
+        return C;
     }
 }

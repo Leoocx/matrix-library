@@ -47,12 +47,12 @@ public static double[] retrosubstituicao(double[][] U, double[] b) {
 
     public static void main(String[] args) {
         double[][] U = {
-            {2,  1, 1, 0},
-            {0,  1, 1, 1},
-            {0,  0, 2, 2},
-            {0, 0, 0, 2}
+            {1,  2, 1, 0},
+            {0,  1, -1, 1},
+            {0,  0, 1, 3},
+            {0, 0, 0, -4}
         };
-        double[] b1 = {3, 7,-14, -6};
+        double[] b1 = {4, 1, 4, -4};
         
         double[] x1 = retrosubstituicao(U, b1);
         System.out.println("Solução via retrosubstituição:");
