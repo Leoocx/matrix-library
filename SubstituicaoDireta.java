@@ -42,22 +42,22 @@ public static double[] substituicaoDireta(double[][] L, double[] b) {
     return x;
 }
 
-    /* 
-        Sistema triangular inferior
-    3x = 9
-    2x + 4y = 14
-    x -  y + 2z = 8
-    double[][] L = {
-        {3,  0,  0},
-        {2,  4,  0},
-        {1, -1,  2}
-    };
-    double[] b2 = {9, 14, 8};
+    public static void main(String[] args) {
+        double[][] L = {
+            {1,  0,  0, 0},
+            {0,  1,  0, 0},
+            {4, 3,  1, 0},
+            {3, 4, 1, 1}
+        };
+        double[] b2 = {3, 7, 19, 17};
+        
+        double[] x2 = substituicaoDireta(L, b2);
+        System.out.println("\nSolução via substituição direta:");
+        System.out.printf("x = %.2f, y = %.2f, w = %.2f, z = %.2f\n", x2[0], x2[1], x2[2], x2[3]);
+        
+    }
     
-    double[] x2 = substituicaoDireta(L, b2);
-    System.out.println("\nSolução via substituição direta:");
-    System.out.printf("x = %.2f, y = %.2f, z = %.2f\n", x2[0], x2[1], x2[2])
-    */
+    
 
 
 }

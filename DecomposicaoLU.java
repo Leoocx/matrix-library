@@ -7,9 +7,11 @@
  * Com pivotamento parcial: PA = L * U (P é matriz de permutação de linhas)
  * Com pivotamento completo: PAQ = L * U (P e Q permutam linhas e colunas)
  * 
- * @author
+ * @author (adaptado com melhorias e comentários em português)
  */
 public class DecomposicaoLU {
+
+    private static final double EPS = 1e-12; // tolerância para considerar zero (evita falsos positivos)
 
     // ------------------------------------------------------------
     // 1. Decomposição LU simples (sem pivotamento)
@@ -46,8 +48,8 @@ public class DecomposicaoLU {
         
         // Algoritmo de Doolittle
         for (int k = 0; k < n - 1; k++) {
-            // Verificar singularidade (pivô zero)
-            if (U[k][k] == 0) {
+            // Verificar singularidade (pivô próximo de zero)
+            if (Math.abs(U[k][k]) < EPS) {
                 throw new IllegalArgumentException("Matriz singular: pivô zero na posição (" + k + "," + k + ")");
             }
             for (int i = k + 1; i < n; i++) {
@@ -61,7 +63,7 @@ public class DecomposicaoLU {
             }
         }
         // Verificar último pivô
-        if (U[n-1][n-1] == 0) {
+        if (Math.abs(U[n-1][n-1]) < EPS) {
             throw new IllegalArgumentException("Matriz singular.");
         }
         
@@ -116,11 +118,11 @@ public class DecomposicaoLU {
                     maxIndex = i;
                 }
             }
-            if (maxVal == 0) {
+            if (maxVal < EPS) {
                 throw new IllegalArgumentException("Matriz singular (coluna " + k + " totalmente zero)");
             }
             
-            // Trocar linhas em U e em L (e no vetor perm)
+            // Trocar linhas em U, em L e no vetor perm
             if (maxIndex != k) {
                 // Trocar linhas de U
                 double[] tempU = U[k];
@@ -136,8 +138,8 @@ public class DecomposicaoLU {
                 perm[maxIndex] = tempP;
             }
             
-            // Se o pivô é zero, singular
-            if (U[k][k] == 0) {
+            // Se o pivô é zero (não deveria acontecer devido ao pivotamento)
+            if (Math.abs(U[k][k]) < EPS) {
                 throw new IllegalArgumentException("Matriz singular (pivô zero após pivotamento)");
             }
             
@@ -151,7 +153,7 @@ public class DecomposicaoLU {
             }
         }
         // Verificar último pivô
-        if (U[n-1][n-1] == 0) {
+        if (Math.abs(U[n-1][n-1]) < EPS) {
             throw new IllegalArgumentException("Matriz singular.");
         }
         
@@ -217,7 +219,7 @@ public class DecomposicaoLU {
                     }
                 }
             }
-            if (maxVal == 0) {
+            if (maxVal < EPS) {
                 throw new IllegalArgumentException("Matriz singular (submatriz a partir de (" + k + "," + k + ") é nula)");
             }
             
@@ -244,20 +246,22 @@ public class DecomposicaoLU {
                     U[i][k] = U[i][maxCol];
                     U[i][maxCol] = temp;
                 }
-                // Trocar colunas em L? Não, L é triangular inferior e só tem elementos nas colunas < i.
-                // Mas precisamos também trocar colunas em L? Na verdade, as permutações de colunas afetam
-                // a decomposição, mas não precisamos modificar L porque L é construída com base na matriz
-                // após permutação de colunas. O algoritmo padrão para pivotamento completo aplica as trocas
-                // de colunas em U, e as trocas de linhas em L e U. O vetor permColunas é atualizado.
-                // L permanece consistente.
+                // NOTA: Não trocamos colunas em L porque L é triangular inferior
+                // e as colunas trocadas estão à direita da diagonal (ou na diagonal),
+                // e L só tem elementos não nulos na coluna k (multiplicadores) para i > k.
+                // A troca de colunas em L afetaria a estrutura triangular? Sim, mas o algoritmo
+                // padrão de pivotamento completo não exige troca em L, pois a permutação de colunas
+                // é aplicada à matriz original antes da fatoração. A matriz L é construída a partir
+                // da matriz já permutada por colunas. Portanto, NÃO se deve trocar colunas em L.
+                
                 // Atualizar permutação de colunas
                 int tempQ = permColunas[k];
                 permColunas[k] = permColunas[maxCol];
                 permColunas[maxCol] = tempQ;
             }
             
-            // Se o pivô é zero (não deveria acontecer pois maxVal>0)
-            if (U[k][k] == 0) {
+            // Se o pivô é zero (não deveria acontecer pois maxVal > EPS)
+            if (Math.abs(U[k][k]) < EPS) {
                 throw new IllegalArgumentException("Matriz singular (pivô zero)");
             }
             
@@ -271,7 +275,7 @@ public class DecomposicaoLU {
             }
         }
         // Verificar último pivô
-        if (U[n-1][n-1] == 0) {
+        if (Math.abs(U[n-1][n-1]) < EPS) {
             throw new IllegalArgumentException("Matriz singular.");
         }
         
@@ -303,11 +307,12 @@ public class DecomposicaoLU {
     // Exemplo de uso e teste
     // ------------------------------------------------------------
     public static void main(String[] args) {
-        // Exemplo: matriz 3x3
+        // Exemplo: matriz 4x4 (não singular)
         double[][] A = {
-            {2, 1, -1},
-            {1, 2, 1},
-            {1, 1, 1}
+            {2, 1, 1, 0},
+            {0, 1, 1, 1},
+            {8, 7, 9, 5},
+            {6, 7, 9, 8}
         };
         
         System.out.println("Matriz original A:");

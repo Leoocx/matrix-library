@@ -42,24 +42,24 @@ public static double[] retrosubstituicao(double[][] U, double[] b) {
     return x;
 }
 
-/*
 
 
-    Sistema triangular superior
-    2x + 3y -  z = 8
-    4y + 2z = 6
-    5z = 10
-    double[][] U = {
-        {2,  3, -1},
-        {0,  4,  2},
-        {0,  0,  5}
-    };
-    double[] b1 = {8, 6, 10};
-    
-    double[] x1 = retrosubstituicao(U, b1);
-    System.out.println("Solução via retrosubstituição:");
-    System.out.printf("x = %.2f, y = %.2f, z = %.2f\n", x1[0], x1[1], x1[2]);
-*/
+
+    public static void main(String[] args) {
+        double[][] U = {
+            {2,  1, 1, 0},
+            {0,  1, 1, 1},
+            {0,  0, 2, 2},
+            {0, 0, 0, 2}
+        };
+        double[] b1 = {3, 7,-14, -6};
+        
+        double[] x1 = retrosubstituicao(U, b1);
+        System.out.println("Solução via retrosubstituição:");
+        System.out.printf("x = %.2f, y = %.2f, w = %.2f, z= %.2f\n", x1[0], x1[1], x1[2], x1[3]);
+        
+    }
+
 
 
 
