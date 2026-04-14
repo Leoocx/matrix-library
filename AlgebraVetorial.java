@@ -22,6 +22,31 @@ public class AlgebraVetorial {
     }
 
     /**
+ * Calcula o produto vetorial (cross product) entre dois vetores no R³.
+ * O resultado é um vetor ortogonal a ambos os vetores de entrada, seguindo a regra da mão direita.
+ * 
+ * Fórmula: w = u × v, onde:
+ * w₁ = u₂·v₃ − u₃·v₂
+ * w₂ = u₃·v₁ − u₁·v₃
+ * w₃ = u₁·v₂ − u₂·v₁
+ * 
+ * @param u primeiro vetor (dimensão 3)
+ * @param v segundo vetor (dimensão 3)
+ * @return vetor w = u × v (dimensão 3)
+ * @throws IllegalArgumentException se os vetores não tiverem dimensão 3
+ */
+    public static double[] produtoVetorial(double[] u, double[] v) {
+        if (u.length != 3 || v.length != 3) {
+            throw new IllegalArgumentException("Produto vetorial definido apenas para vetores no R³.");
+        }
+        double[] w = new double[3];
+        w[0] = u[1] * v[2] - u[2] * v[1];
+        w[1] = u[2] * v[0] - u[0] * v[2];
+        w[2] = u[0] * v[1] - u[1] * v[0];
+        return w;
+    }
+
+    /**
      * Calcula a norma (magnitude) de um vetor.
      * @param v vetor
      * @return ||v||
@@ -149,6 +174,7 @@ a[0], a[1], a[2], b[0], b[1], b[2]);
         System.out.printf("Projeção vetorial de a sobre b: (%.2f, %.2f, %.2f)\n", 
 proj[0], proj[1], proj[2]);
         
+
         double[] ort = complementoOrtogonal(b);
         System.out.printf("Vetor ortogonal a b: (%.2f, %.2f, %.2f)\n", ort[0], ort[1], ort[2]);
         System.out.printf("Verificação b·ort = %.2f\n", produtoEscalar(b, ort));
