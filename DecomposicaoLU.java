@@ -1,13 +1,10 @@
 /**
  * Algoritmos para decomposição LU de matrizes quadradas.
- * 
- * Decomposição LU: A = L * U, onde L é triangular inferior (com diagonal 1)
+ * * Decomposição LU: A = L * U, onde L é triangular inferior (com diagonal 1)
  * e U é triangular superior.
- * 
- * Com pivotamento parcial: PA = L * U (P é matriz de permutação de linhas)
+ * * Com pivotamento parcial: PA = L * U (P é matriz de permutação de linhas)
  * Com pivotamento completo: PAQ = L * U (P e Q permutam linhas e colunas)
- * 
- * @author (adaptado com melhorias e comentários em português)
+ * * @author (adaptado com melhorias e comentários em português)
  */
 public class DecomposicaoLU {
 
@@ -19,10 +16,9 @@ public class DecomposicaoLU {
     /**
      * Calcula a decomposição A = L * U (sem pivotamento).
      * A deve ser não singular.
-     * 
-     * @param A Matriz quadrada (n x n). Não será modificada.
+     * * @param A Matriz quadrada (n x n). Não será modificada.
      * @return Um array de duas matrizes [L, U] onde L é triangular inferior
-     *         (com diagonal 1) e U é triangular superior.
+     * (com diagonal 1) e U é triangular superior.
      * @throws IllegalArgumentException se A não for quadrada ou for singular.
      */
     public static double[][][] decomposicaoLUSimples(double[][] A) {
@@ -75,13 +71,12 @@ public class DecomposicaoLU {
     // ------------------------------------------------------------
     /**
      * Calcula a decomposição PA = L * U, onde P é matriz de permutação de linhas.
-     * 
-     * @param A Matriz quadrada (n x n). Não será modificada.
+     * * @param A Matriz quadrada (n x n). Não será modificada.
      * @return Um array contendo:
-     *         [0] = matriz L (triangular inferior, diagonal 1)
-     *         [1] = matriz U (triangular superior)
-     *         [2] = vetor de permutação de linhas P (tamanho n)
-     *               A permutação é tal que P * A = L * U.
+     * [0] = matriz L (triangular inferior, diagonal 1)
+     * [1] = matriz U (triangular superior)
+     * [2] = vetor de permutação de linhas P (tamanho n)
+     * A permutação é tal que P * A = L * U.
      * @throws IllegalArgumentException se A não for quadrada ou for singular.
      */
     public static Object[] decomposicaoPALU(double[][] A) {
@@ -128,10 +123,14 @@ public class DecomposicaoLU {
                 double[] tempU = U[k];
                 U[k] = U[maxIndex];
                 U[maxIndex] = tempU;
-                // Trocar linhas de L (apenas elementos já preenchidos)
-                double[] tempL = L[k];
-                L[k] = L[maxIndex];
-                L[maxIndex] = tempL;
+
+                // CORREÇÃO: Trocar apenas os multiplicadores em L (elementos à esquerda da diagonal)
+                for (int j = 0; j < k; j++) {
+                    double temp = L[k][j];
+                    L[k][j] = L[maxIndex][j];
+                    L[maxIndex][j] = temp;
+                }
+
                 // Trocar permutação
                 int tempP = perm[k];
                 perm[k] = perm[maxIndex];
@@ -166,14 +165,13 @@ public class DecomposicaoLU {
     /**
      * Calcula a decomposição PAQ = L * U, onde P e Q são matrizes de permutação
      * de linhas e colunas, respectivamente.
-     * 
-     * @param A Matriz quadrada (n x n). Não será modificada.
+     * * @param A Matriz quadrada (n x n). Não será modificada.
      * @return Um array contendo:
-     *         [0] = matriz L (triangular inferior, diagonal 1)
-     *         [1] = matriz U (triangular superior)
-     *         [2] = vetor de permutação de linhas P (tamanho n)
-     *         [3] = vetor de permutação de colunas Q (tamanho n)
-     *         A permutação é tal que P * A * Q = L * U.
+     * [0] = matriz L (triangular inferior, diagonal 1)
+     * [1] = matriz U (triangular superior)
+     * [2] = vetor de permutação de linhas P (tamanho n)
+     * [3] = vetor de permutação de colunas Q (tamanho n)
+     * A permutação é tal que P * A * Q = L * U.
      * @throws IllegalArgumentException se A não for quadrada ou for singular.
      */
     public static Object[] decomposicaoPAQLU(double[][] A) {
@@ -228,10 +226,14 @@ public class DecomposicaoLU {
                 double[] tempU = U[k];
                 U[k] = U[maxRow];
                 U[maxRow] = tempU;
-                // Trocar linhas de L (apenas os elementos já preenchidos)
-                double[] tempL = L[k];
-                L[k] = L[maxRow];
-                L[maxRow] = tempL;
+
+                // CORREÇÃO: Trocar apenas os multiplicadores em L (elementos à esquerda da diagonal)
+                for (int j = 0; j < k; j++) {
+                    double temp = L[k][j];
+                    L[k][j] = L[maxRow][j];
+                    L[maxRow][j] = temp;
+                }
+
                 // Atualizar permutação de linhas
                 int tempP = permLinhas[k];
                 permLinhas[k] = permLinhas[maxRow];
@@ -246,13 +248,6 @@ public class DecomposicaoLU {
                     U[i][k] = U[i][maxCol];
                     U[i][maxCol] = temp;
                 }
-                // NOTA: Não trocamos colunas em L porque L é triangular inferior
-                // e as colunas trocadas estão à direita da diagonal (ou na diagonal),
-                // e L só tem elementos não nulos na coluna k (multiplicadores) para i > k.
-                // A troca de colunas em L afetaria a estrutura triangular? Sim, mas o algoritmo
-                // padrão de pivotamento completo não exige troca em L, pois a permutação de colunas
-                // é aplicada à matriz original antes da fatoração. A matriz L é construída a partir
-                // da matriz já permutada por colunas. Portanto, NÃO se deve trocar colunas em L.
                 
                 // Atualizar permutação de colunas
                 int tempQ = permColunas[k];
