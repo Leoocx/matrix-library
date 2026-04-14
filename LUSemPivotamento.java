@@ -144,7 +144,7 @@ public static double[] multiplicarMatrizVetor(double[][] A, double[] x) {
     }
     return b;
     }
-
+/*/
 private static double[][] multiplicarMatrizes(double[][] A, double[][] B) {
         int n = A.length;
         int m = A[0].length;
@@ -161,4 +161,5 @@ private static double[][] multiplicarMatrizes(double[][] A, double[][] B) {
         }
         return C;
     }
+        */
 }

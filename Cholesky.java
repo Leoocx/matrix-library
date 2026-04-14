@@ -213,6 +213,88 @@ public class Cholesky {
     }
 
     /**
+ * Calcula o determinante de uma matriz quadrada usando eliminação de Gauss
+ * com pivotamento parcial (complexidade O(n³)).
+ *
+ * @param A matriz quadrada (n x n)
+ * @return o determinante da matriz
+ * @throws IllegalArgumentException se a matriz não for quadrada
+ */
+
+
+    // Calcula o determinante de uma matriz de n qualquer
+    public static double determinante(double[][] A) {
+        int n = A.length;
+        if (n == 0) {
+            throw new IllegalArgumentException("Matriz vazia.");
+        }
+        for (double[] linha : A) {
+            if (linha.length != n) {
+                throw new IllegalArgumentException("A matriz deve ser quadrada.");
+            }
+        }
+
+        // Cria uma cópia da matriz para não modificar a original
+        double[][] M = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(A[i], 0, M[i], 0, n);
+        }
+
+        double det = 1.0;
+        int trocas = 0;  // conta trocas de linha (para ajustar o sinal)
+
+        for (int k = 0; k < n - 1; k++) {
+            // Pivotamento parcial: encontra o maior elemento na coluna k (abaixo da diagonal)
+            int maxIdx = k;
+            double maxVal = Math.abs(M[k][k]);
+            for (int i = k + 1; i < n; i++) {
+                double absVal = Math.abs(M[i][k]);
+                if (absVal > maxVal) {
+                    maxVal = absVal;
+                    maxIdx = i;
+                }
+            }
+
+            // Se o pivô for zero, a matriz é singular → determinante zero
+            if (maxVal < 1e-12) {
+                return 0.0;
+            }
+
+            // Troca linhas se necessário
+            if (maxIdx != k) {
+                double[] temp = M[k];
+                M[k] = M[maxIdx];
+                M[maxIdx] = temp;
+                trocas++;
+            }
+
+            // Eliminação para as linhas abaixo do pivô
+            for (int i = k + 1; i < n; i++) {
+                double fator = M[i][k] / M[k][k];
+                // Apenas as colunas de k+1 em diante precisam ser atualizadas
+                for (int j = k + 1; j < n; j++) {
+                    M[i][j] -= fator * M[k][j];
+                }
+                // A parte abaixo da diagonal é zerada (opcional, mas útil para clareza)
+                M[i][k] = 0.0;
+            }
+        }
+
+        // O determinante é o produto dos elementos da diagonal da matriz triangular superior
+        for (int i = 0; i < n; i++) {
+            det *= M[i][i];
+        }
+
+        // Ajusta o sinal conforme o número de trocas de linha
+        if (trocas % 2 != 0) {
+            det = -det;
+        }
+
+        // Pequena correção para evitar -0.0
+        return Math.abs(det) < 1e-12 ? 0.0 : det;
+    }
+
+    /**
      * Retorna o fator triangular superior R da decomposição de Cholesky,
      * tal que A = Rᵀ * R.
      * @return matriz R (n x n), triangular superior

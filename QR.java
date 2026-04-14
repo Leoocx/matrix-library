@@ -136,6 +136,80 @@ public class QR {
         return new double[][][]{Q, R};
     }
 
+    /**
+ * Calcula a inversa de uma matriz quadrada usando Gauss-Jordan com pivotamento parcial.
+ *
+ * @param A matriz quadrada (n x n) não singular
+ * @return a matriz inversa de A
+ * @throws IllegalArgumentException se a matriz não for quadrada ou for singular
+ */
+public static double[][] inversa(double[][] A) {
+    int n = A.length;
+    if (n == 0) {
+        throw new IllegalArgumentException("Matriz vazia.");
+    }
+    for (double[] linha : A) {
+        if (linha.length != n) {
+            throw new IllegalArgumentException("A matriz deve ser quadrada.");
+        }
+    }
+
+    // Cria matriz aumentada [A | I]
+    double[][] aumentada = new double[n][2 * n];
+    for (int i = 0; i < n; i++) {
+        System.arraycopy(A[i], 0, aumentada[i], 0, n);
+        aumentada[i][n + i] = 1.0;  // identidade à direita
+    }
+
+    // Eliminação de Gauss-Jordan
+    for (int col = 0; col < n; col++) {
+        // Pivotamento parcial: encontra maior elemento na coluna atual (abaixo/na diagonal)
+        int maxLinha = col;
+        double maxValor = Math.abs(aumentada[col][col]);
+        for (int lin = col + 1; lin < n; lin++) {
+            double absVal = Math.abs(aumentada[lin][col]);
+            if (absVal > maxValor) {
+                maxValor = absVal;
+                maxLinha = lin;
+            }
+        }
+
+        // Se pivô for praticamente zero, matriz é singular
+        if (maxValor < 1e-12) {
+            throw new IllegalArgumentException("Matriz singular – não possui inversa.");
+        }
+
+        // Troca linhas se necessário
+        if (maxLinha != col) {
+            double[] temp = aumentada[col];
+            aumentada[col] = aumentada[maxLinha];
+            aumentada[maxLinha] = temp;
+        }
+
+        // Normaliza a linha do pivô (divide pelo pivô)
+        double pivô = aumentada[col][col];
+        for (int j = 0; j < 2 * n; j++) {
+            aumentada[col][j] /= pivô;
+        }
+
+        // Zera as outras linhas na coluna atual
+        for (int lin = 0; lin < n; lin++) {
+            if (lin == col) continue;
+            double fator = aumentada[lin][col];
+            for (int j = 0; j < 2 * n; j++) {
+                aumentada[lin][j] -= fator * aumentada[col][j];
+            }
+        }
+    }
+
+    // Extrai a inversa da metade direita da matriz aumentada
+    double[][] inversa = new double[n][n];
+    for (int i = 0; i < n; i++) {
+        System.arraycopy(aumentada[i], n, inversa[i], 0, n);
+    }
+    return inversa;
+}
+
     // --------------------------------------------------------------
     // Exemplo de uso: base em R^5 e decomposição QR
     // --------------------------------------------------------------
@@ -176,7 +250,6 @@ public class QR {
         imprimirMatriz(QTQ);
         
         // 2. Decomposição QR de uma matriz não singular
-        // Exemplo: matriz 5x5 com determinante não nulo
         double[][] A = {
             {1, 1, 0, 0},
             {1, 0, 1, 0},
